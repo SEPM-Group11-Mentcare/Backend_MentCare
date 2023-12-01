@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 require('dotenv').config();
+const errorHandler = require('./middlewares/error')
 
 // MIDDLEWARE
 app.use(cors());
@@ -17,13 +18,17 @@ mongoose.connect(process.env.DATABASE)
 .catch((err) => console.log(err));
 
 // IMPORT ROUTES
+const accountRoute = require('./routes/account');
+
 
 // ROUTES MIDDLEWARE
+app.use('/api/account', accountRoute);
+app.use(errorHandler);
 
 const port = process.env.PORT || 8000;
 
 app.listen(port, () => {
-  console.log(`App listening on port http://localhost:${port}/api`);
+  console.log(`App listening on port http://localhost:${port}`);
 });
 
 
