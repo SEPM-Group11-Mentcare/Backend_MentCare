@@ -6,8 +6,8 @@ router.post('/signup', account.signup)
 
 router.post('/signin', account.signin)
 
-router.post('/updatestatus', account.changeTherapistStatus)
+// router.post('/updatestatus', account.changeTherapistStatus)
 
-router.get('/gettherapistrequest', account.getTherapistRequestList)
+// router.get('/gettherapistrequest', account.getTherapistRequestList)
 
 module.exports = router
