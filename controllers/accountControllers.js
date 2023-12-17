@@ -8,11 +8,11 @@ const { generateToken } = require("../middlewares/generateToken")
 
 exports.signup = async(req, res, next) => {
   const password = await hashPwd(req?.body?.password, next);
+  const role = req.params.role;
   let data = {
     username: req?.body?.username,
     name: req?.body?.name,
     password: password,
-    role: req?.body?.role,
     nationalID: req?.body?.nationalID,
     specialization: req?.body?.specialization,
     pratisingCertNum: req?.body?.pratisingCertNum,
@@ -22,11 +22,10 @@ exports.signup = async(req, res, next) => {
     const usernameExistedInPatient = await Patient.findOne({username: data.username});
     const usernameExistedInTherapist = await Therapist.findOne({username: data.username});
     const usernameExistedInAdmin = await Admin.findOne({username: data.username});
-
     if (usernameExistedInPatient || usernameExistedInTherapist || usernameExistedInAdmin) {
-      return next(new ErrorHandler("Username had been existed"))
+      return next(new ErrorHandler("Username had been existed", 404))
     }
-    if (data.role === "Patient") {
+    if (role === "patient") {
       await Patient.create(data)
       .then(() => {
         res.status(200).json('Signup successfully')
@@ -34,7 +33,7 @@ exports.signup = async(req, res, next) => {
       .catch((err) => {
         next(new ErrorHandler(err.message, 404))
       })
-    } else if (data.role === "Therapist") {
+    } else if (role === "therapist") {
       await Therapist.create(data)
       .then(() => {
         res.status(200).json('Signup successfully')
@@ -52,7 +51,7 @@ exports.signin = async(req, res, next) => {
   let data = {
     username: req?.body?.username,
     password: req?.body?.password,
-    role: req?.body?.role
+    // role: req?.body?.role
   }
 
   try {
