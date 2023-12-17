@@ -12,7 +12,6 @@ exports.isAuthenticated = async (req, res, next) => {
   try {
     const token = req.headers.authorization;
     // console.log(token);
-    // If the token is not existed render to login page with message
     if (!token) {
       return res.status(401).json({ message: "You must login", data: token });
     }
