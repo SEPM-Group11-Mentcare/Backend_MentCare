@@ -19,10 +19,12 @@ mongoose.connect(process.env.DATABASE)
 
 // IMPORT ROUTES
 const accountRoute = require('./routes/account');
+const therapistRoute = require('./routes/therapistRoute');
 
 
 // ROUTES MIDDLEWARE
 app.use('/api/account', accountRoute);
+app.use('/api', therapistRoute);
 app.use(errorHandler);
 
 const port = process.env.PORT || 8000;
