@@ -28,11 +28,7 @@ app.use('/api/account', accountRoute);
 app.use('/api/admin', adminRoute);
 app.use('/api/therapist', therapistRoute);
 
-const therapistRoute = require('./routes/therapistRoute');
-
-
 // ROUTES MIDDLEWARE
-app.use('/api', therapistRoute);
 
 app.use(errorHandler);
 

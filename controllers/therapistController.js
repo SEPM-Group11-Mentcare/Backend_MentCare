@@ -52,9 +52,10 @@ exports.deleteSchedule = async(req, res, next) => {
     next(new ErrorHandler(err.message, 404));
   })
 
+}
 
 // Get all therapists with pagination
-module.exports.getTherapists = async (req, res, next) => {
+exports.getTherapists = async (req, res, next) => {
     try {
         // Get page number and number of items per page
         const page = parseInt(req.query.page) || 1;
@@ -71,15 +72,17 @@ module.exports.getTherapists = async (req, res, next) => {
 
     catch (err) {
         console.error(err);
-        next(new ErrorHandler(err.message, 500));
     }
 }
 
 // Get a therapist
-module.exports.getTherapist = async (req, res, next) => {
+exports.getTherapist = async (req, res, next) => {
     const id = req.params.id;
     try {
-        const therapist = await Therapist.findById({ _id: id });
+        const therapist = await Therapist.findById({ _id: id })
+        .catch((err) => {
+          next(new ErrorHandler(err.message, 404))
+        })
         // Response
         res.status(200).json(therapist);
     }
@@ -87,4 +90,4 @@ module.exports.getTherapist = async (req, res, next) => {
         console.error(err);
         next(new ErrorHandler(err.message, 404));
     }
-}
+  }
