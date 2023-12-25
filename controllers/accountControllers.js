@@ -1,12 +1,12 @@
-const Admin = require('../models/admin');
-const Therapist = require('../models/therapist');
+const Admin = require("../models/admin");
+const Therapist = require("../models/therapist");
 const ErrorHandler = require("../utils/errorHandler");
-const Patient = require('../models/patient');
-const { hashPwd } = require('../middlewares/hash');
-const bcrypt = require('bcryptjs');
-const { generateToken } = require("../middlewares/generateToken")
+const Patient = require("../models/patient");
+const { hashPwd } = require("../middlewares/hash");
+const bcrypt = require("bcryptjs");
+const { generateToken } = require("../middlewares/generateToken");
 
-exports.signup = async(req, res, next) => {
+exports.signup = async (req, res, next) => {
   const password = await hashPwd(req?.body?.password, next);
   const role = req.params.role;
   let data = {
@@ -16,8 +16,7 @@ exports.signup = async(req, res, next) => {
     nationalID: req?.body?.nationalID,
     specialization: req?.body?.specialization,
     pratisingCertNum: req?.body?.pratisingCertNum,
-  }
-
+  };
   try {
     const usernameExistedInPatient = await Patient.findOne({username: data.username});
     const usernameExistedInTherapist = await Therapist.findOne({username: data.username});
@@ -35,29 +34,30 @@ exports.signup = async(req, res, next) => {
       })
     } else if (role === "therapist") {
       await Therapist.create(data)
-      .then(() => {
-        res.status(200).json('Signup successfully')
-      })
-      .catch((err) => {
-        next(new ErrorHandler(err.message, 404))
-      })
+        .then(() => {
+          res.status(200).json("Signup successfully");
+        })
+        .catch((err) => {
+          next(new ErrorHandler(err.message, 404));
+        });
     }
   } catch (err) {
-    next(new ErrorHandler(err.message, 404))
+    next(new ErrorHandler(err.message, 404));
   }
-}
+};
 
-exports.signin = async(req, res, next) => {
+exports.signin = async (req, res, next) => {
   let data = {
     username: req?.body?.username,
     password: req?.body?.password,
     // role: req?.body?.role
   }
 
+
   try {
-    const patient = await Patient.findOne({username: data.username});
-    const therapist = await Therapist.findOne({username: data.username});
-    const admin = await Admin.findOne({username: data.username});
+    const patient = await Patient.findOne({ username: data.username });
+    const therapist = await Therapist.findOne({ username: data.username });
+    const admin = await Admin.findOne({ username: data.username });
     let user;
 
     if (patient) {
@@ -69,7 +69,7 @@ exports.signin = async(req, res, next) => {
     }
 
     if (admin) {
-      user = admin
+      user = admin;
     }
 
     if (user) {
@@ -77,12 +77,12 @@ exports.signin = async(req, res, next) => {
       if (checkUserPwd) {
         generateToken(user, 200, res);
       } else {
-        next(new ErrorHandler('Invalid credentials', 200))
+        next(new ErrorHandler("Invalid credentials", 200));
       }
     } else {
-      next(new ErrorHandler('Invalid credentials', 200))
+      next(new ErrorHandler("Invalid credentials", 200));
     }
   } catch (err) {
     next(new ErrorHandler(err.message, 404));
   }
-}
+};
