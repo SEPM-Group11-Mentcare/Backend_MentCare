@@ -14,7 +14,7 @@ const accountSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Password is required']
   },
-  type: {
+  role: {
     type: String, 
     enum: ['user', 'therapist', 'admin']
   }
