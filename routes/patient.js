@@ -5,6 +5,7 @@ const {isAuthenticated} = require('../middlewares/auth');
 
 /* Define patient api */
 router.get('/profile', isAuthenticated, patient.getPatient);
+router.put('/profile', isAuthenticated, patient.updateProfile);
 
 module.exports = router;
 
