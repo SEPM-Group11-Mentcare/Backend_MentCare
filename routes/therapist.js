@@ -4,12 +4,15 @@ const therapist = require('../controllers/therapistController')
 
 router.get('/view', therapist.getTherapists);
 
-router.get('/:id', therapist.getTherapist);
+router.get('/profile', therapist.getTherapist);
 
-router.post('/schedule', therapist.setSchedule)
+router.put('/profile', therapist.updateProfile);
+
+router.post('/schedule', therapist.setSchedule);
 
 router.get('/schedules', therapist.getSchedule);
 
 router.delete('/delete/:id', therapist.deleteSchedule);
+
 
 module.exports = router
