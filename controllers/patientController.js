@@ -3,6 +3,38 @@ const Therapist = require("../models/therapist");
 const ErrorHandler = require("../utils/errorHandler");
 const Patient = require("../models/patient");
 const Schedule = require("../models/schedule");
+const Appointment = require("../models/appointment");
+
+exports.bookAppointment = async (req, res, next) => {
+  const data = {
+    patient: "6569855c14e6be6350dcc306",
+    therapist: req?.body?.therapist,
+    schedule: req?.body?.schedule,
+    note: req?.body?.note,
+    accept: req?.body?.accept,
+  };
+
+  try {
+    const appointment = await Appointment.create(data).catch((err) => {
+      next(new ErrorHandler(err.message, 404));
+    });
+
+    await Schedule.findByIdAndUpdate(
+      data.schedule,
+      { status: "Booked" },
+      { new: true }
+    )
+    .catch((err) => {
+      next(new ErrorHandler(err.message, 404))
+    })
+
+    res
+      .status(200)
+      .json({ message: "Booking successfully", appointment: appointment });
+  } catch (err) {
+    next(new ErrorHandler(err.message, 404));
+  }
+};
 
 // Get all therapists with pagination
 exports.getTherapists = async (req, res, next) => {
@@ -75,4 +107,12 @@ exports.getTherapistSchedule = async (req, res, next) => {
   });
 
   res.status(200).json(schedules);
+};
+
+exports.getScheduleTime = async (req, res, next) => {
+  const schedule = await Schedule.findById(req.params.id).catch((err) => {
+    next(new ErrorHandler(err.message, 404));
+  });
+
+  res.status(200).json(schedule);
 };

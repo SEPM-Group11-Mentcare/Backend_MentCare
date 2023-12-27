@@ -10,6 +10,7 @@ exports.setSchedule = async (req, res, next) => {
     schedules: req.body.schedule,
     user: "656985db94e13306d13304d3",
   };
+  
   data.schedules.map(async (date) => {
     await Schedule.create({ dateTime: date, therapist: data.user }).catch(
       (err) => {
