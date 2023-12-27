@@ -19,12 +19,13 @@ mongoose.connect(process.env.DATABASE)
 
 // IMPORT ROUTES
 const accountRoute = require('./routes/account');
-
+const patientRoute = require('./routes/patient')
 const adminRoute = require('./routes/admin');
 const therapistRoute = require('./routes/therapist');
 
 // ROUTES MIDDLEWARE
 app.use('/api/account', accountRoute);
+app.use('/api/patient', patientRoute);
 app.use('/api/admin', adminRoute);
 app.use('/api/therapist', therapistRoute);
 
