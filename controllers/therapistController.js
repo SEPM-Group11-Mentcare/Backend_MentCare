@@ -42,3 +42,28 @@ exports.deleteSchedule = async (req, res, next) => {
     });
 };
 
+
+// Therapist - Update profile
+module.exports.updateProfile = async (req, res, next) => {
+    try {
+        const id = req.userID;
+        const data = {
+            name: req?.body?.name,
+            username: req?.body?.username,
+            nationalID: req?.body?.nationalID,
+            specialization: req?.body?.specialization,
+            practisingCertNum: req?.body?.practisingCertNum,
+        }
+        const updatedProfile = await Therapist.findByIdAndUpdate(id, data, { new: true });
+        if (!updatedProfile) {
+            return next(new ErrorHandler('Profile not found', 404));
+        }
+        res.status(200).json(updatedProfile);
+    }
+    catch (err) {
+        next(new ErrorHandler(err.message, 500));
+    }
+
+
+}
+

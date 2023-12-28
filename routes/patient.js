@@ -11,4 +11,11 @@ router.get('/therapist/:id', patient.getTherapist);
 
 router.get('/schedule/:id', patient.getTherapistSchedule);
 
-module.exports = router
+
+/* Define patient api */
+router.get('/profile', isAuthenticated, patient.getPatient);
+router.put('/profile', isAuthenticated, patient.updateProfile);
+
+module.exports = router;
+
+
