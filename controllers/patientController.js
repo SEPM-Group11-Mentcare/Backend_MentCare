@@ -118,21 +118,21 @@ exports.getScheduleTime = async (req, res, next) => {
 };
 
 /* Patient - View profile */
-module.exports.getPatient = async (req, res, next) => {
-    const id = req.userID;
-    try {
-        const patient = await Patient.findById(id);
-        // Response
-        res.status(200).json(patient);
-    }
-    catch (err) {
-        console.error(err);
-        next(new ErrorHandler(err.message, 404));
-    }
-}
+// exports.getPatient = async (req, res, next) => {
+//     const id = req.userID;
+//     try {
+//         const patient = await Patient.findById(id);
+//         // Response
+//         res.status(200).json(patient);
+//     }
+//     catch (err) {
+//         console.error(err);
+//         next(new ErrorHandler(err.message, 404));
+//     }
+// }
 
 /* Patient - Update profile */
-module.exports.updateProfile = async (req, res, next) => {
+exports.updateProfile = async (req, res, next) => {
     try {
         const id = req.userID;
         const data = {
