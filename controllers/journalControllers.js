@@ -3,8 +3,13 @@ const Journal = require("../models/journal");
 // Create Journal has user ID
 async function createJournal(req, res, next) {
   try {
-    const { journalText, mood, userId } = req.body;
-    const newJournal = await Journal.create({ journalText, mood, userId });
+    const { journalTitle, journalText, mood, userId } = req.body;
+    const newJournal = await Journal.create({
+      journalTitle,
+      journalText,
+      mood,
+      userId,
+    });
     res.json(newJournal);
   } catch (error) {
     next(error);
