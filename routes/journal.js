@@ -1,10 +1,8 @@
-// journalRoutes.js
-
 const express = require("express");
 const {
   createJournal,
   getJournals,
-  getJournalsByUserId, // Add this import
+  getJournalsByUserId,
   getJournalById,
   updateJournal,
   deleteJournal,

@@ -45,10 +45,10 @@ async function getJournalsByUserId(req, res, next) {
 // Update a journal
 async function updateJournal(req, res, next) {
   try {
-    const { journalText, mood } = req.body;
+    const { journalTitle, journalText, mood, userId } = req.body.journal;
     const updatedJournal = await Journal.findByIdAndUpdate(
       req.params.id,
-      { journalText, mood },
+      { journalTitle, journalText, mood, userId },
       { new: true }
     );
     res.json(updatedJournal);
