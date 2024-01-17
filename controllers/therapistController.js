@@ -3,7 +3,7 @@ const Therapist = require("../models/therapist");
 const ErrorHandler = require("../utils/errorHandler");
 const Patient = require("../models/patient");
 const Schedule = require("../models/schedule");
-const therapist = require("../models/therapist");
+const Appointment = require("../models/appointment");
 
 exports.setSchedule = async (req, res, next) => {
   const data = {
@@ -65,5 +65,53 @@ module.exports.updateProfile = async (req, res, next) => {
     }
 
 
+}
+
+module.exports.getRequestList = async(req, res, next) => {
+  const filter = {
+    status: "Confirmed" || "Declined",
+    therapist: "656985db94e13306d13304d3",
+  };
+  const appointments = await Appointment.find(filter).catch((err) => {
+    next(new ErrorHandler(err.message, 404));
+  });
+
+  const appointmentInfo = await Promise.all(
+    appointments.map(async (appointment) => {
+      const patient = await Patient.findById(appointment.patient).catch(
+        (err) => {
+          next(new ErrorHandler(err.message, 404));
+        }
+      );
+
+      const therapist = await Therapist.findById(appointment.therapist).catch(
+        (err) => {
+          next(new ErrorHandler(err.message, 404));
+        }
+      );
+
+      const schedule = await Schedule.findById(appointment.schedule).catch(
+        (err) => {
+          next(new ErrorHandler(err.message, 404));
+        }
+      );
+
+      return {
+        patientName: patient.name,
+        patient: patient._id,
+        therapistName: therapist.name,
+        therapist: therapist._id,
+        dateTime: schedule.dateTime,
+        id: appointment._id,
+        accept: appointment.accept,
+        note: appointment.note,
+        total: appointment.total,
+        status: appointment.status,
+      };
+    })
+  );
+
+  // console.log(appointmentInfo);
+  res.status(200).json(appointmentInfo);
 }
 

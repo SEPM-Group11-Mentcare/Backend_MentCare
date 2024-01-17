@@ -15,6 +15,8 @@ router.get('/schedules', therapist.getSchedule);
 
 router.delete('/delete/:id', therapist.deleteSchedule);
 
+router.get('/requests', therapist.getRequestList);
+
 // router.get('/:id', therapist.getTherapist);
 
 
