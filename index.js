@@ -10,12 +10,12 @@ const errorHandler = require('./middlewares/error')
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
 
 //CONNECT DATABASE
 mongoose.connect(process.env.DATABASE)
-.then(() => console.log('DB connected'))
-.catch((err) => console.log(err));
+  .then(() => console.log('DB connected'))
+  .catch((err) => console.log(err));
 
 // IMPORT ROUTES
 const accountRoute = require('./routes/account');
@@ -23,6 +23,7 @@ const patientRoute = require('./routes/patient')
 const adminRoute = require('./routes/admin');
 const therapistRoute = require('./routes/therapist');
 const scheduleRoute = require('./routes/schedule');
+const medicalRecordRoute = require('./routes/medicalRecord');
 
 
 // ROUTES MIDDLEWARE
@@ -31,6 +32,7 @@ app.use('/api/patient', patientRoute);
 app.use('/api/admin', adminRoute);
 app.use('/api/therapist', therapistRoute);
 app.use('/api/schedule', scheduleRoute);
+app.use('/api/medicalRecord', medicalRecordRoute);
 
 
 // ROUTES MIDDLEWARE
