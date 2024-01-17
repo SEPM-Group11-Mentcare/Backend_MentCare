@@ -13,6 +13,10 @@ router.get('/schedule/:id', patient.getTherapistSchedule);
 
 router.put('/profile', isAuthenticated, patient.updateProfile);
 
+router.get('/appointments', patient.getAppointment);
+
+router.put('/appointment', patient.changeAppointmentStatus);
+
 module.exports = router;
 
 

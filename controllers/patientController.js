@@ -12,6 +12,7 @@ exports.bookAppointment = async (req, res, next) => {
     schedule: req?.body?.schedule,
     note: req?.body?.note,
     accept: req?.body?.accept,
+    total: req?.body?.total,
   };
 
   try {
@@ -152,3 +153,81 @@ exports.updateProfile = async (req, res, next) => {
     
 
 }
+
+exports.getAppointment = async(req, res, next) => {
+  const filter = {
+    status: req?.query?.status,
+    patient: "6569855c14e6be6350dcc306",
+  };
+  if (filter.status === "All") {
+    delete filter.status;
+  }
+
+  const appointments = await Appointment.find(filter).catch((err) => {
+    next(new ErrorHandler(err.message, 404));
+  });
+
+  const appointmentInfo = await Promise.all(
+    appointments.map(async (appointment) => {
+      const patient = await Patient.findById(appointment.patient).catch(
+        (err) => {
+          next(new ErrorHandler(err.message, 404));
+        }
+      );
+
+      const therapist = await Therapist.findById(appointment.therapist).catch(
+        (err) => {
+          next(new ErrorHandler(err.message, 404));
+        }
+      );
+
+      const schedule = await Schedule.findById(appointment.schedule).catch(
+        (err) => {
+          next(new ErrorHandler(err.message, 404));
+        }
+      );
+
+      return {
+        patientName: patient.name,
+        patient: patient._id,
+        therapistName: therapist.name,
+        therapist: therapist._id,
+        dateTime: schedule.dateTime,
+        id: appointment._id,
+        accept: appointment.accept,
+        note: appointment.note,
+        total: appointment.total,
+        status: appointment.status,
+      };
+    })
+  );
+
+  // console.log(appointmentInfo);
+  res.status(200).json(appointmentInfo);
+}
+
+exports.changeAppointmentStatus = async (req, res, next) => {
+  // console.log(req.body)
+  const { appointmentID } = req?.body;
+  // console.log(appointmentID);
+  try {
+    const updateAppointment = await Appointment.findByIdAndUpdate(
+      appointmentID,
+      { $set: { status: "Declined" } },
+      { new: true, runValidators: true }
+    ).catch((err) => {
+      next(new ErrorHandler(err.message, 404));
+    });
+
+    if (!updateAppointment) {
+      return res.status(404).json({ message: "Appointment not found" });
+    }
+
+    res.status(200).json({
+      message: "Appointment status updated",
+      appointment: updateAppointment,
+    });
+  } catch (err) {
+    next(new ErrorHandler(err.message, 404));
+  }
+};

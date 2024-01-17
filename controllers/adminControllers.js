@@ -54,7 +54,7 @@ exports.getAppointments = async (req, res, next) => {
   const appointments = await Appointment.find(filter).catch((err) => {
     next(new ErrorHandler(err.message, 404));
   });
-
+  
   const appointmentInfo = await Promise.all(
     appointments.map(async (appointment) => {
       const patient = await Patient.findById(appointment.patient).catch(
