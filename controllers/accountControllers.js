@@ -86,3 +86,7 @@ exports.signin = async (req, res, next) => {
     next(new ErrorHandler(err.message, 404));
   }
 };
+
+exports.getUserInfo = async(req, res, next) => {
+  res.status(200).json(req.userID);
+}

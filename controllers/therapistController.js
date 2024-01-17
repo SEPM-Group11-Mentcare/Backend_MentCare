@@ -10,7 +10,7 @@ exports.setSchedule = async (req, res, next) => {
     schedules: req.body.schedule,
     user: "656985db94e13306d13304d3",
   };
-  
+
   data.schedules.map(async (date) => {
     await Schedule.create({ dateTime: date, therapist: data.user }).catch(
       (err) => {
@@ -44,7 +44,7 @@ exports.deleteSchedule = async (req, res, next) => {
 
 
 // Therapist - Update profile
-module.exports.updateProfile = async (req, res, next) => {
+exports.updateProfile = async (req, res, next) => {
     try {
         const id = req.userID;
         const data = {
@@ -63,7 +63,5 @@ module.exports.updateProfile = async (req, res, next) => {
     catch (err) {
         next(new ErrorHandler(err.message, 500));
     }
-
-
 }
 
