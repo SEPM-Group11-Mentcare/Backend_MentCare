@@ -8,7 +8,6 @@ const { generateToken } = require("../middlewares/generateToken");
 
 exports.signup = async (req, res, next) => {
   const password = await hashPwd(req?.body?.password, next);
-  const role = req.params.role;
   let data = {
     username: req?.body?.username,
     name: req?.body?.name,
@@ -16,6 +15,7 @@ exports.signup = async (req, res, next) => {
     nationalID: req?.body?.nationalID,
     specialization: req?.body?.specialization,
     pratisingCertNum: req?.body?.pratisingCertNum,
+    role: req.params.role
   };
   try {
     const usernameExistedInPatient = await Patient.findOne({username: data.username});
@@ -24,7 +24,7 @@ exports.signup = async (req, res, next) => {
     if (usernameExistedInPatient || usernameExistedInTherapist || usernameExistedInAdmin) {
       return next(new ErrorHandler("Username had been existed", 404))
     }
-    if (role === "patient") {
+    if (data.role === "patient") {
       await Patient.create(data)
       .then(() => {
         res.status(200).json('Signup successfully')
@@ -32,7 +32,7 @@ exports.signup = async (req, res, next) => {
       .catch((err) => {
         next(new ErrorHandler(err.message, 404))
       })
-    } else if (role === "therapist") {
+    } else if (data.role === "therapist") {
       await Therapist.create(data)
         .then(() => {
           res.status(200).json("Signup successfully");
@@ -50,9 +50,7 @@ exports.signin = async (req, res, next) => {
   let data = {
     username: req?.body?.username,
     password: req?.body?.password,
-    // role: req?.body?.role
   }
-
 
   try {
     const patient = await Patient.findOne({ username: data.username });

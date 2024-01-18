@@ -135,17 +135,23 @@ exports.getScheduleTime = async (req, res, next) => {
 /* Patient - Update profile */
 exports.updateProfile = async (req, res, next) => {
     try {
-        const id = req.userID;
+      console.log("123");
+        // const id = req.userID;
         const data = {
             name: req?.body?.name,
             username: req?.body?.username,
             dob: req?.body?.dob,
+            avatar: req?.file?.path,
         }
-        const updatedProfile = await Patient.findByIdAndUpdate(id, data, {new: true});
-        if (!updatedProfile) {
-            return next(new ErrorHandler('Profile not found', 404));
-        }
-        res.status(200).json(updatedProfile);
+        // console.log("123");
+        console.log(req?.file);
+
+
+        // const updatedProfile = await Patient.findByIdAndUpdate(id, data, {new: true});
+        // if (!updatedProfile) {
+        //     return next(new ErrorHandler('Profile not found', 404));
+        // }
+        // res.status(200).json(updatedProfile);
     }
     catch (err) {
         next(new ErrorHandler(err.message, 500));
