@@ -16,6 +16,16 @@ const therapistSchema = new mongoose.Schema({
     required: [true, 'Pratising Cert Num is required'],
     unique: true
   },
+  price: {
+    type: Number,
+    default: 500000,
+  },
+  aboutme: {
+    type: String,
+  },
+  experience: {
+    type: String,
+  },
   status: {
     type: String,
     enum: ['Pending', 'Approve', 'Decline'],

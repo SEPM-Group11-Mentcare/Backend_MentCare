@@ -6,7 +6,7 @@ const jwtGenerateToken = async function(id) {
   });
 }
 
-const generateToken = async function(user, statusCode, res) {
+const generateToken = async function(user, statusCode, res, role) {
   const token = await jwtGenerateToken(user._id);
   
   // Configure options for the token cookie
@@ -19,7 +19,7 @@ const generateToken = async function(user, statusCode, res) {
   res
     .status(statusCode)
     .cookie('token', token, options)
-    .json({ token })
+    .json({ token, role })
 }
 
 module.exports = {generateToken}

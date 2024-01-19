@@ -3,19 +3,19 @@ const router = express.Router()
 const patient = require('../controllers/patientController')
 const { isAuthenticated } = require("../middlewares/auth")
 
-router.post('/booking', patient.bookAppointment);
+router.post('/booking', isAuthenticated, patient.bookAppointment);
 
-router.get('/view', patient.getTherapists);
+router.get('/view', isAuthenticated, patient.getTherapists);
 
-router.get('/therapist/:id', patient.getTherapist);
+router.get('/therapist/:id', isAuthenticated, patient.getTherapist);
 
-router.get('/schedule/:id', patient.getTherapistSchedule);
+router.get('/schedule/:id', isAuthenticated, patient.getTherapistSchedule);
 
 router.put('/profile', isAuthenticated, patient.updateProfile);
 
-router.get('/appointments', patient.getAppointment);
+router.get('/appointments', isAuthenticated, patient.getAppointment);
 
-router.put('/appointment', patient.changeAppointmentStatus);
+router.put('/appointment', isAuthenticated, patient.changeAppointmentStatus);
 
 module.exports = router;
 

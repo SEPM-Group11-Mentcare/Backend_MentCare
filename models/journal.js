@@ -6,10 +6,11 @@ const journalSchema = new mongoose.Schema({
   journalText: { type: String, required: true },
   createdDate: {
     type: Date,
-    default: () => format(new Date(), "dd/MM/yy"),
+    default: new Date(),
   },
   mood: { type: String, required: true },
-  userId: { type: String, required: true },
+  patient: { type: mongoose.Schema.Types.ObjectId,
+    ref: 'Patient' },
 });
 
 const Journal = mongoose.model("Journal", journalSchema);

@@ -7,7 +7,7 @@ const Appointment = require("../models/appointment");
 
 exports.bookAppointment = async (req, res, next) => {
   const data = {
-    patient: "6569855c14e6be6350dcc306",
+    patient: req.userID,
     therapist: req?.body?.therapist,
     schedule: req?.body?.schedule,
     note: req?.body?.note,
@@ -73,6 +73,7 @@ exports.getTherapists = async (req, res, next) => {
           specialization: therapist.specialization,
           name: therapist.name,
           availableToday: availableToday,
+          price: therapist.price
         };
       })
     );
@@ -118,30 +119,16 @@ exports.getScheduleTime = async (req, res, next) => {
   res.status(200).json(schedule);
 };
 
-/* Patient - View profile */
-// exports.getPatient = async (req, res, next) => {
-//     const id = req.userID;
-//     try {
-//         const patient = await Patient.findById(id);
-//         // Response
-//         res.status(200).json(patient);
-//     }
-//     catch (err) {
-//         console.error(err);
-//         next(new ErrorHandler(err.message, 404));
-//     }
-// }
-
 /* Patient - Update profile */
 exports.updateProfile = async (req, res, next) => {
     try {
-        const id = req.userID;
         const data = {
+          // id:req?.body?.id,
             name: req?.body?.name,
             username: req?.body?.username,
             dob: req?.body?.dob,
         }
-        const updatedProfile = await Patient.findByIdAndUpdate(id, data, {new: true});
+        const updatedProfile = await Patient.findByIdAndUpdate(req.userID, data, {new: true});
         if (!updatedProfile) {
             return next(new ErrorHandler('Profile not found', 404));
         }
@@ -150,14 +137,13 @@ exports.updateProfile = async (req, res, next) => {
     catch (err) {
         next(new ErrorHandler(err.message, 500));
     }
-    
 
 }
 
 exports.getAppointment = async(req, res, next) => {
   const filter = {
     status: req?.query?.status,
-    patient: "6569855c14e6be6350dcc306",
+    patient: req.userID,
   };
   if (filter.status === "All") {
     delete filter.status;
@@ -201,15 +187,11 @@ exports.getAppointment = async(req, res, next) => {
       };
     })
   );
-
-  // console.log(appointmentInfo);
   res.status(200).json(appointmentInfo);
 }
 
 exports.changeAppointmentStatus = async (req, res, next) => {
-  // console.log(req.body)
   const { appointmentID } = req?.body;
-  // console.log(appointmentID);
   try {
     const updateAppointment = await Appointment.findByIdAndUpdate(
       appointmentID,

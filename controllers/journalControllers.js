@@ -3,14 +3,14 @@ const Journal = require("../models/journal");
 // Create Journal has user ID
 async function createJournal(req, res, next) {
   try {
-    const { journalTitle, journalText, mood, userId } = req.body;
-    const newJournal = await Journal.create({
-      journalTitle,
-      journalText,
-      mood,
-      userId,
-    });
-    res.json(newJournal);
+    const data = {
+      journalTitle: req?.body?.journalTitle,
+      journalText: req?.body?.journalText,
+      mood: req?.body?.mood,
+      patient: req.userID
+    }
+    const newJournal = await Journal.create(data);
+    res.status(200).json({newJournal: newJournal, message: "Create journal successfully"});
   } catch (error) {
     next(error);
   }
@@ -39,9 +39,10 @@ async function getJournalById(req, res, next) {
 // Get journal list by user id
 async function getJournalsByUserId(req, res, next) {
   try {
-    const userId = req.params.userId;
-    const journals = await Journal.find({ userId });
-    res.json(journals);
+    // const userId = req.params.userId;
+    const journals = await Journal.find({ patient: req.userID._id });
+    console.log(journals);
+    res.status(200).json(journals);
   } catch (error) {
     next(error);
   }
@@ -50,7 +51,8 @@ async function getJournalsByUserId(req, res, next) {
 // Update a journal
 async function updateJournal(req, res, next) {
   try {
-    const { journalTitle, journalText, mood, userId } = req.body.journal;
+    const { journalTitle, journalText, mood } = req.body.journal;
+    const userId = req.userID._id;
     const updatedJournal = await Journal.findByIdAndUpdate(
       req.params.id,
       { journalTitle, journalText, mood, userId },

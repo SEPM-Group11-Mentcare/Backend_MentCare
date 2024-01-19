@@ -14,6 +14,13 @@ const accountSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Password is required']
   },
+  dob: {
+    type: Date,
+    required: false,
+  },
+  avatar: {
+    type: String,
+  },
   role: {
     type: String, 
     enum: ['user', 'therapist', 'admin']

@@ -9,6 +9,8 @@ router.post('/signin', account.signin)
 
 router.get('/profile', isAuthenticated, account.getUserInfo)
 
+router.post('/signout', isAuthenticated, account.signout);
+
 // router.post('/updatestatus', account.changeTherapistStatus)
 
 // router.get('/gettherapistrequest', account.getTherapistRequestList)

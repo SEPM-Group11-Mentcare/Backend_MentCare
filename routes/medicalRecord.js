@@ -5,7 +5,7 @@ const { isAuthenticated } = require('../middlewares/auth');
 
 router.post('/create', isAuthenticated, medicalRecord.create);
 
-router.get('/', isAuthenticated, medicalRecord.viewRecords);
+router.get('/patient/:id', isAuthenticated, medicalRecord.viewRecords);
 
 router.get('/:id', isAuthenticated, medicalRecord.viewRecord);
 
