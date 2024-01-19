@@ -213,3 +213,30 @@ exports.changeAppointmentStatus = async (req, res, next) => {
     next(new ErrorHandler(err.message, 404));
   }
 };
+
+exports.getAccessList = async(req, res, next) => {
+  const accessList = req.userID.listOfAccess;
+  try {
+    const therapistList = await Promise.all(accessList.map(async(access) => {
+      const therapist = await Therapist.findById(access);
+      return therapist;
+    }))
+
+    // console.log(therapistList);
+    res.status(200).json(therapistList);
+  } catch(err) {
+    next(new ErrorHandler(err.message, 404))
+  }
+}
+
+exports.removeAccess = async(req, res, next) => {
+  const accessList = req.userID.listOfAccess;
+  const newAccessList = accessList.filter((access) => JSON.stringify(access) != JSON.stringify(req.params.id))
+  await Patient.findByIdAndUpdate(req.userID, {
+    listOfAccess: newAccessList
+  }, { new: true })
+  .catch((err) => {
+    next(new ErrorHandler(err.message, 404))
+  })
+  res.status(200).json("Remove access successfully");
+}
