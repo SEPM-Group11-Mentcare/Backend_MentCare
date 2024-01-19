@@ -12,15 +12,17 @@ const { isAuthenticated } = require("../middlewares/auth");
 
 // router.put("/profile", therapist.updateProfile);
 
-router.post("/schedule", therapist.setSchedule);
+router.post("/schedule", isAuthenticated, therapist.setSchedule);
 
-router.get("/schedules", therapist.getSchedule);
+router.get("/schedules", isAuthenticated, therapist.getSchedule);
 
-router.delete("/delete/:id", therapist.deleteSchedule);
+router.delete("/delete/:id", isAuthenticated, therapist.deleteSchedule);
 
-router.get('/requests', therapist.getRequestList);
+router.get('/requests', isAuthenticated, therapist.getRequestList);
 
+router.get('/patients', isAuthenticated, therapist.getPatientList);
 
+router.put('/profile', isAuthenticated, therapist.updateProfile);
 // router.get('/:id', therapist.getTherapist);
 
 module.exports = router;

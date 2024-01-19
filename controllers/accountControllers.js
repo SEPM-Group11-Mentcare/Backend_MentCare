@@ -57,23 +57,27 @@ exports.signin = async (req, res, next) => {
     const therapist = await Therapist.findOne({ username: data.username });
     const admin = await Admin.findOne({ username: data.username });
     let user;
+    let role;
 
     if (patient) {
       user = patient;
+      role = "patient";
     }
 
     if (therapist) {
       user = therapist;
+      role = "therapist";
     }
 
     if (admin) {
       user = admin;
+      role = "admin";
     }
 
     if (user) {
       const checkUserPwd = bcrypt.compareSync(data.password, user.password);
       if (checkUserPwd) {
-        generateToken(user, 200, res);
+        generateToken(user, 200, res, role);
       } else {
         next(new ErrorHandler("Invalid credentials", 200));
       }
@@ -88,3 +92,8 @@ exports.signin = async (req, res, next) => {
 exports.getUserInfo = async(req, res, next) => {
   res.status(200).json(req.userID);
 }
+
+exports.signout = async (req, res, next) => {
+  res.clearCookie("token");
+  res.status(200).json({ message: "Logged out successfully" });
+};

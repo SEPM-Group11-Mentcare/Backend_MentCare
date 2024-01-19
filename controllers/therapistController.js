@@ -8,7 +8,7 @@ const Appointment = require("../models/appointment");
 exports.setSchedule = async (req, res, next) => {
   const data = {
     schedules: req.body.schedule,
-    user: "656985db94e13306d13304d3",
+    user: req.userID,
   };
 
   data.schedules.map(async (date) => {
@@ -24,7 +24,7 @@ exports.setSchedule = async (req, res, next) => {
 
 exports.getSchedule = async (req, res, next) => {
   const schedules = await Schedule.find({
-    therapist: "656985db94e13306d13304d3",
+    therapist: req.userID,
   }).catch((err) => {
     next(new ErrorHandler(err.message, 404));
   });
@@ -42,33 +42,33 @@ exports.deleteSchedule = async (req, res, next) => {
     });
 };
 
-
 // Therapist - Update profile
 exports.updateProfile = async (req, res, next) => {
-    try {
-        const id = req.userID;
-        const data = {
-            name: req?.body?.name,
-            username: req?.body?.username,
-            nationalID: req?.body?.nationalID,
-            specialization: req?.body?.specialization,
-            practisingCertNum: req?.body?.practisingCertNum,
-        }
-        const updatedProfile = await Therapist.findByIdAndUpdate(id, data, { new: true });
-        if (!updatedProfile) {
-            return next(new ErrorHandler('Profile not found', 404));
-        }
-        res.status(200).json(updatedProfile);
+  try {
+    const id = req.userID;
+    const data = {
+      name: req?.body?.name,
+      username: req?.body?.username,
+      nationalID: req?.body?.nationalID,
+      specialization: req?.body?.specialization,
+      practisingCertNum: req?.body?.practisingCertNum,
+    };
+    const updatedProfile = await Therapist.findByIdAndUpdate(id, data, {
+      new: true,
+    });
+    if (!updatedProfile) {
+      return next(new ErrorHandler("Profile not found", 404));
     }
-    catch (err) {
-        next(new ErrorHandler(err.message, 500));
-    }
-}
+    res.status(200).json(updatedProfile);
+  } catch (err) {
+    next(new ErrorHandler(err.message, 500));
+  }
+};
 
-module.exports.getRequestList = async(req, res, next) => {
+module.exports.getRequestList = async (req, res, next) => {
   const filter = {
     status: "Confirmed" || "Declined",
-    therapist: "656985db94e13306d13304d3",
+    therapist: req.userID,
   };
   const appointments = await Appointment.find(filter).catch((err) => {
     next(new ErrorHandler(err.message, 404));
@@ -111,5 +111,75 @@ module.exports.getRequestList = async(req, res, next) => {
 
   // console.log(appointmentInfo);
   res.status(200).json(appointmentInfo);
-}
+};
 
+exports.getPatientList = async (req, res, next) => {
+  try {
+    const user = req.userID;
+    // const user = "656985db94e13306d13304d3";
+    const patients = await Patient.find().catch((err) => {
+      next(new ErrorHandler(err.message, 404));
+    });
+
+    // console.log(req.userID);
+
+    const patientList = [];
+    await Promise.all(
+      patients.map(async (patient) => {
+        const listOfAccess = patient.listOfAccess;
+        if (listOfAccess) {
+          // console.log(patient.listOfAccess);
+          listOfAccess.map((access) => {
+            if (JSON.stringify(access) === JSON.stringify(user._id)) {
+              const patientInfo = {
+                _id: patient._id,
+                name: patient.name,
+              };
+              patientList.push(patientInfo);
+            }
+          });
+        }
+      })
+    );
+
+    // console.log(patientList);
+    res.status(200).json(patientList);
+  } catch (err) {
+    next(new ErrorHandler(err.message, 404));
+  }
+};
+
+exports.updateProfile = async (req, res, next) => {
+  const data = {
+    id: req?.body?.id,
+    username: req?.body?.username,
+    name: req?.body?.name,
+    dob: req?.body?.dob,
+    nationalID: req?.body?.nationalID,
+    practisingCertNum: req?.body?.practisingCertNum,
+    specialization: req?.body?.specialization,
+    price: req?.body?.price,
+    aboutme: req?.body?.aboutme,
+    experience: req?.body?.experience,
+  };
+
+  try {
+    // console.log(data);
+    await Therapist.findByIdAndUpdate(req.userID, {
+      id: data.id,
+      username: data.username,
+      name: data.name,
+      dob: data.dob,
+      nationalID: data.nationalID,
+      practisingCertNum: data.practisingCertNum,
+      specialization: data.specialization,
+      price: data.price,
+      aboutme: data.aboutme,
+      experience: data.experience,
+    }, {
+      new: true
+    });
+  } catch (err) {
+    next(new ErrorHandler(err.message, 404));
+  }
+};

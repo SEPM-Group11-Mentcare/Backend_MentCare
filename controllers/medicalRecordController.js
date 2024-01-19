@@ -75,7 +75,7 @@ module.exports.viewRecords = async (req, res, next) => {
     // console.log(records);
     res.status(200).json(definedRecords);
   } catch (err) {
-    next(new ErrorHandler(err.message, 500));
+    // next(new ErrorHandler(err.message, 500));
   }
 };
 

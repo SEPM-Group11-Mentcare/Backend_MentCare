@@ -7,14 +7,15 @@ const {
   updateJournal,
   deleteJournal,
 } = require("../controllers/journalControllers");
+const { isAuthenticated } = require('../middlewares/auth');
 
 const router = express.Router();
 
-router.post("/", createJournal);
-router.get("/", getJournals);
-router.get("/:id", getJournalById);
-router.get("/patient/:userId", getJournalsByUserId);
-router.put("/:id", updateJournal);
-router.delete("/:id", deleteJournal);
+router.post("/", isAuthenticated, createJournal);
+router.get("/", isAuthenticated, getJournals);
+router.get("/patient", isAuthenticated, getJournalsByUserId);
+router.get("/:id", isAuthenticated, getJournalById);
+router.put("/:id", isAuthenticated, updateJournal);
+router.delete("/:id", isAuthenticated, deleteJournal);
 
 module.exports = router;
