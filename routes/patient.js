@@ -17,6 +17,10 @@ router.get('/appointments', isAuthenticated, patient.getAppointment);
 
 router.put('/appointment', isAuthenticated, patient.changeAppointmentStatus);
 
+router.get("/access", isAuthenticated, patient.getAccessList);
+
+router.put("/removeaccess/:id", isAuthenticated, patient.removeAccess);
+
 module.exports = router;
 
 
