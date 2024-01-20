@@ -18,9 +18,6 @@ const accountSchema = new mongoose.Schema({
     type: Date,
     required: false,
   },
-  avatar: {
-    type: String,
-  },
   role: {
     type: String, 
     enum: ['patient', 'therapist', 'admin']
