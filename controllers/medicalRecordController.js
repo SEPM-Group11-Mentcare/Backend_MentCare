@@ -7,27 +7,26 @@ const Schedule = require("../models/schedule");
 
 // Create a medical record
 module.exports.create = async (req, res, next) => {
+  console.log("224");
   try {
     const data = {
       meetingSummary: req?.body?.meetingSummary,
       diagnostic: req?.body?.diagnostic,
-      issuedAt: req?.body?.issuedAt,
       appointment: req?.body?.appointment,
       prescription: req?.body?.prescription,
       advice: req?.body?.advice,
     };
+    console.log(data);
     const newRecord = await MedicalRecord.create(data);
     console.log(newRecord);
     res.status(200).json("New record created successfully");
   } catch (err) {
-    next(new ErrorHandler(err.message, 500));
+    // next(new ErrorHandler(err.message, 500));
   }
 };
 
 // View all medical records
 module.exports.viewRecords = async (req, res, next) => {
-  // const user = req.userID;
-  // const user = await Pa
   const user = req.params.id;
   try {
     // Find the user account type

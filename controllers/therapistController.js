@@ -4,6 +4,7 @@ const ErrorHandler = require("../utils/errorHandler");
 const Patient = require("../models/patient");
 const Schedule = require("../models/schedule");
 const Appointment = require("../models/appointment");
+const MedicalRecord = require("../models/medicalRecord");
 
 exports.setSchedule = async (req, res, next) => {
   const data = {
@@ -82,6 +83,11 @@ module.exports.getRequestList = async (req, res, next) => {
         }
       );
 
+      const record = await MedicalRecord.findOne({appointment: appointment._id})
+      .catch((err) => {
+        next(new ErrorHandler(err.message, 404));
+      })
+
       const therapist = await Therapist.findById(appointment.therapist).catch(
         (err) => {
           next(new ErrorHandler(err.message, 404));
@@ -105,6 +111,7 @@ module.exports.getRequestList = async (req, res, next) => {
         note: appointment.note,
         total: appointment.total,
         status: appointment.status,
+        record: record ? record._id : null,
         meetingID: appointment.meetingID,
       };
     })
