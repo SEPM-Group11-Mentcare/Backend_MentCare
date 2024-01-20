@@ -13,8 +13,10 @@ exports.bookAppointment = async (req, res, next) => {
     note: req?.body?.note,
     accept: req?.body?.accept,
     total: req?.body?.total,
-    meetingid: req?.body?.meetingID,
+    meetingID: req?.body?.meetingID,
   };
+
+  console.log(data);
 
   try {
     const appointment = await Appointment.create(data).catch((err) => {
@@ -184,6 +186,7 @@ exports.getAppointment = async (req, res, next) => {
         note: appointment.note,
         total: appointment.total,
         status: appointment.status,
+        meetingID: appointment.meetingID,
       };
     })
   );
