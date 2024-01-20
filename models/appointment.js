@@ -1,32 +1,35 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
 const appointmentSchema = new mongoose.Schema({
   patient: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Patient'
+    ref: "Patient",
   },
   therapist: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Therapist'
+    ref: "Therapist",
   },
   schedule: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Schedule'
+    ref: "Schedule",
   },
   note: {
     type: String,
   },
   accept: {
-    type: Boolean
+    type: Boolean,
   },
   total: {
     type: Number,
   },
+  meetingID: {
+    type: String,
+  },
   status: {
     type: String,
     enum: ["Pending", "Confirmed", "Declined", "Done"],
-    default: "Pending"
-  }
-})
+    default: "Pending",
+  },
+});
 
-module.exports =  mongoose.model("Appointment", appointmentSchema);
+module.exports = mongoose.model("Appointment", appointmentSchema);

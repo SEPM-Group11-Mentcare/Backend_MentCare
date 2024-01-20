@@ -112,6 +112,7 @@ module.exports.getRequestList = async (req, res, next) => {
         total: appointment.total,
         status: appointment.status,
         record: record ? record._id : null,
+        meetingID: appointment.meetingID,
       };
     })
   );
@@ -172,20 +173,24 @@ exports.updateProfile = async (req, res, next) => {
 
   try {
     // console.log(data);
-    await Therapist.findByIdAndUpdate(req.userID, {
-      id: data.id,
-      username: data.username,
-      name: data.name,
-      dob: data.dob,
-      nationalID: data.nationalID,
-      practisingCertNum: data.practisingCertNum,
-      specialization: data.specialization,
-      price: data.price,
-      aboutme: data.aboutme,
-      experience: data.experience,
-    }, {
-      new: true
-    });
+    await Therapist.findByIdAndUpdate(
+      req.userID,
+      {
+        id: data.id,
+        username: data.username,
+        name: data.name,
+        dob: data.dob,
+        nationalID: data.nationalID,
+        practisingCertNum: data.practisingCertNum,
+        specialization: data.specialization,
+        price: data.price,
+        aboutme: data.aboutme,
+        experience: data.experience,
+      },
+      {
+        new: true,
+      }
+    );
   } catch (err) {
     next(new ErrorHandler(err.message, 404));
   }
