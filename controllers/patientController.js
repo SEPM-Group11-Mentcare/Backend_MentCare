@@ -13,6 +13,7 @@ exports.bookAppointment = async (req, res, next) => {
     note: req?.body?.note,
     accept: req?.body?.accept,
     total: req?.body?.total,
+    meetingid: req?.body?.meetingID,
   };
 
   try {
@@ -24,10 +25,9 @@ exports.bookAppointment = async (req, res, next) => {
       data.schedule,
       { status: "Booked" },
       { new: true }
-    )
-    .catch((err) => {
-      next(new ErrorHandler(err.message, 404))
-    })
+    ).catch((err) => {
+      next(new ErrorHandler(err.message, 404));
+    });
 
     res
       .status(200)
@@ -73,7 +73,7 @@ exports.getTherapists = async (req, res, next) => {
           specialization: therapist.specialization,
           name: therapist.name,
           availableToday: availableToday,
-          price: therapist.price
+          price: therapist.price,
         };
       })
     );
@@ -121,26 +121,26 @@ exports.getScheduleTime = async (req, res, next) => {
 
 /* Patient - Update profile */
 exports.updateProfile = async (req, res, next) => {
-    try {
-        const data = {
-          // id:req?.body?.id,
-            name: req?.body?.name,
-            username: req?.body?.username,
-            dob: req?.body?.dob,
-        }
-        const updatedProfile = await Patient.findByIdAndUpdate(req.userID, data, {new: true});
-        if (!updatedProfile) {
-            return next(new ErrorHandler('Profile not found', 404));
-        }
-        res.status(200).json(updatedProfile);
+  try {
+    const data = {
+      // id:req?.body?.id,
+      name: req?.body?.name,
+      username: req?.body?.username,
+      dob: req?.body?.dob,
+    };
+    const updatedProfile = await Patient.findByIdAndUpdate(req.userID, data, {
+      new: true,
+    });
+    if (!updatedProfile) {
+      return next(new ErrorHandler("Profile not found", 404));
     }
-    catch (err) {
-        next(new ErrorHandler(err.message, 500));
-    }
+    res.status(200).json(updatedProfile);
+  } catch (err) {
+    next(new ErrorHandler(err.message, 500));
+  }
+};
 
-}
-
-exports.getAppointment = async(req, res, next) => {
+exports.getAppointment = async (req, res, next) => {
   const filter = {
     status: req?.query?.status,
     patient: req.userID,
@@ -188,7 +188,7 @@ exports.getAppointment = async(req, res, next) => {
     })
   );
   res.status(200).json(appointmentInfo);
-}
+};
 
 exports.changeAppointmentStatus = async (req, res, next) => {
   const { appointmentID } = req?.body;
@@ -214,29 +214,36 @@ exports.changeAppointmentStatus = async (req, res, next) => {
   }
 };
 
-exports.getAccessList = async(req, res, next) => {
+exports.getAccessList = async (req, res, next) => {
   const accessList = req.userID.listOfAccess;
   try {
-    const therapistList = await Promise.all(accessList.map(async(access) => {
-      const therapist = await Therapist.findById(access);
-      return therapist;
-    }))
+    const therapistList = await Promise.all(
+      accessList.map(async (access) => {
+        const therapist = await Therapist.findById(access);
+        return therapist;
+      })
+    );
 
     // console.log(therapistList);
     res.status(200).json(therapistList);
-  } catch(err) {
-    next(new ErrorHandler(err.message, 404))
+  } catch (err) {
+    next(new ErrorHandler(err.message, 404));
   }
-}
+};
 
-exports.removeAccess = async(req, res, next) => {
+exports.removeAccess = async (req, res, next) => {
   const accessList = req.userID.listOfAccess;
-  const newAccessList = accessList.filter((access) => JSON.stringify(access) != JSON.stringify(req.params.id))
-  await Patient.findByIdAndUpdate(req.userID, {
-    listOfAccess: newAccessList
-  }, { new: true })
-  .catch((err) => {
-    next(new ErrorHandler(err.message, 404))
-  })
+  const newAccessList = accessList.filter(
+    (access) => JSON.stringify(access) != JSON.stringify(req.params.id)
+  );
+  await Patient.findByIdAndUpdate(
+    req.userID,
+    {
+      listOfAccess: newAccessList,
+    },
+    { new: true }
+  ).catch((err) => {
+    next(new ErrorHandler(err.message, 404));
+  });
   res.status(200).json("Remove access successfully");
-}
+};
