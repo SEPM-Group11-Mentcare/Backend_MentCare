@@ -7,7 +7,7 @@ const {
   updateJournal,
   deleteJournal,
 } = require("../controllers/journalControllers");
-const { isAuthenticated } = require('../middlewares/auth');
+const { isAuthenticated } = require("../middlewares/auth");
 
 const router = express.Router();
 

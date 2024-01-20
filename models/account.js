@@ -23,7 +23,7 @@ const accountSchema = new mongoose.Schema({
   },
   role: {
     type: String, 
-    enum: ['user', 'therapist', 'admin']
+    enum: ['patient', 'therapist', 'admin']
   }
 })
 
