@@ -54,7 +54,7 @@ exports.getAppointments = async (req, res, next) => {
   const appointments = await Appointment.find(filter).catch((err) => {
     next(new ErrorHandler(err.message, 404));
   });
-  
+
   const appointmentInfo = await Promise.all(
     appointments.map(async (appointment) => {
       const patient = await Patient.findById(appointment.patient).catch(
@@ -115,8 +115,13 @@ exports.changeAppointmentStatus = async (req, res, next) => {
       const therapistToUpdate = updateAppointment.therapist;
 
       // Check if therapistToUpdate is not already in the listOfAccess array
-      const isTherapistAlreadyAdded =
-        patient.listOfAccess.includes(updateAppointment.therapist);
+      let isTherapistAlreadyAdded = false;
+      if (patient.listOfAccess) {
+        isTherapistAlreadyAdded = patient.listOfAccess.includes(
+          updateAppointment.therapist
+        );
+      }
+
       if (!isTherapistAlreadyAdded) {
         await Patient.findByIdAndUpdate(
           updateAppointment.patient,

@@ -204,6 +204,14 @@ exports.changeAppointmentStatus = async (req, res, next) => {
       next(new ErrorHandler(err.message, 404));
     });
 
+    await Schedule.findByIdAndUpdate(
+      data.schedule,
+      { status: "Free" },
+      { new: true }
+    ).catch((err) => {
+      next(new ErrorHandler(err.message, 404));
+    });
+
     if (!updateAppointment) {
       return res.status(404).json({ message: "Appointment not found" });
     }
