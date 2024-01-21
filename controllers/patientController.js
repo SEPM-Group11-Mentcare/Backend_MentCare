@@ -136,7 +136,7 @@ exports.updateProfile = async (req, res, next) => {
     if (!updatedProfile) {
       return next(new ErrorHandler("Profile not found", 404));
     }
-    res.status(200).json(updatedProfile);
+    res.status(200).json("Update profile successfully");
   } catch (err) {
     next(new ErrorHandler(err.message, 500));
   }
@@ -205,7 +205,7 @@ exports.changeAppointmentStatus = async (req, res, next) => {
     });
 
     await Schedule.findByIdAndUpdate(
-      data.schedule,
+      updateAppointment.schedule,
       { status: "Free" },
       { new: true }
     ).catch((err) => {

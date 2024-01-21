@@ -18,10 +18,9 @@ exports.changeTherapistStatus = async (req, res, next) => {
       return res.status(404).json({ message: "Therapist not found" });
     }
 
-    res.status(200).json({
-      message: "Therapist status updated",
-      therapist: updatedTherapist,
-    });
+    res.status(200).json(
+     "Therapist status updated",
+    );
   } catch (err) {
     next(new ErrorHandler(err.message, 404));
   }
@@ -141,10 +140,9 @@ exports.changeAppointmentStatus = async (req, res, next) => {
       return res.status(404).json({ message: "Appointment not found" });
     }
 
-    res.status(200).json({
-      message: "Appointment status updated",
-      appointment: updateAppointment,
-    });
+    res.status(200).json(
+      "Appointment status updated"
+    );
   } catch (err) {
     next(new ErrorHandler(err.message, 404));
   }

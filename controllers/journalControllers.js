@@ -10,7 +10,7 @@ async function createJournal(req, res, next) {
       patient: req.userID
     }
     const newJournal = await Journal.create(data);
-    res.status(200).json({newJournal: newJournal, message: "Create journal successfully"});
+    res.status(200).json("Create journal successfully");
   } catch (error) {
     next(error);
   }
@@ -58,7 +58,7 @@ async function updateJournal(req, res, next) {
       { journalTitle, journalText, mood, userId },
       { new: true }
     );
-    res.json(updatedJournal);
+    res.status(200).json("Update journal successfully");
   } catch (error) {
     next(error);
   }
@@ -68,7 +68,7 @@ async function updateJournal(req, res, next) {
 async function deleteJournal(req, res, next) {
   try {
     const deletedJournal = await Journal.findByIdAndDelete(req.params.id);
-    res.json(deletedJournal);
+    res.status(200).json("Delete journal successfully");
   } catch (error) {
     next(error);
   }

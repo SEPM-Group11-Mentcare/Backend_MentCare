@@ -47,6 +47,7 @@ exports.deleteSchedule = async (req, res, next) => {
 exports.updateProfile = async (req, res, next) => {
   try {
     const id = req.userID;
+    console.log(req.userID);
     const data = {
       name: req?.body?.name,
       username: req?.body?.username,
@@ -60,7 +61,7 @@ exports.updateProfile = async (req, res, next) => {
     if (!updatedProfile) {
       return next(new ErrorHandler("Profile not found", 404));
     }
-    res.status(200).json(updatedProfile);
+    res.status(200).json("Update profile successfully");
   } catch (err) {
     next(new ErrorHandler(err.message, 500));
   }
@@ -157,41 +158,41 @@ exports.getPatientList = async (req, res, next) => {
   }
 };
 
-exports.updateProfile = async (req, res, next) => {
-  const data = {
-    id: req?.body?.id,
-    username: req?.body?.username,
-    name: req?.body?.name,
-    dob: req?.body?.dob,
-    nationalID: req?.body?.nationalID,
-    practisingCertNum: req?.body?.practisingCertNum,
-    specialization: req?.body?.specialization,
-    price: req?.body?.price,
-    aboutme: req?.body?.aboutme,
-    experience: req?.body?.experience,
-  };
+// exports.updateProfile = async (req, res, next) => {
+//   const data = {
+//     id: req?.body?.id,
+//     username: req?.body?.username,
+//     name: req?.body?.name,
+//     dob: req?.body?.dob,
+//     nationalID: req?.body?.nationalID,
+//     practisingCertNum: req?.body?.practisingCertNum,
+//     specialization: req?.body?.specialization,
+//     price: req?.body?.price,
+//     aboutme: req?.body?.aboutme,
+//     experience: req?.body?.experience,
+//   };
 
-  try {
-    // console.log(data);
-    await Therapist.findByIdAndUpdate(
-      req.userID,
-      {
-        id: data.id,
-        username: data.username,
-        name: data.name,
-        dob: data.dob,
-        nationalID: data.nationalID,
-        practisingCertNum: data.practisingCertNum,
-        specialization: data.specialization,
-        price: data.price,
-        aboutme: data.aboutme,
-        experience: data.experience,
-      },
-      {
-        new: true,
-      }
-    );
-  } catch (err) {
-    next(new ErrorHandler(err.message, 404));
-  }
-};
+//   try {
+//     // console.log(data);
+//     await Therapist.findByIdAndUpdate(
+//       req.userID,
+//       {
+//         id: data.id,
+//         username: data.username,
+//         name: data.name,
+//         dob: data.dob,
+//         nationalID: data.nationalID,
+//         practisingCertNum: data.practisingCertNum,
+//         specialization: data.specialization,
+//         price: data.price,
+//         aboutme: data.aboutme,
+//         experience: data.experience,
+//       },
+//       {
+//         new: true,
+//       }
+//     );
+//   } catch (err) {
+//     next(new ErrorHandler(err.message, 404));
+//   }
+// };
